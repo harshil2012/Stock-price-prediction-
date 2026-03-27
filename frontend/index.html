@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Major Minor | Terminal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#b1ffb5",
+                        "surface-dim": "#111318",
+                        "secondary-container": "#86039c",
+                        "surface-container-highest": "#333539",
+                        "tertiary-fixed": "#69ff87",
+                        "inverse-surface": "#e2e2e8",
+                        "surface-container-lowest": "#0c0e12",
+                        "outline": "#849396",
+                        "primary-container": "#00e5ff",
+                        "on-error": "#690005",
+                        "primary-fixed": "#9cf0ff",
+                        "on-background": "#e2e2e8",
+                        "secondary-fixed-dim": "#f9abff",
+                        "surface-tint": "#00daf3",
+                        "inverse-on-surface": "#2f3035",
+                        "surface-bright": "#37393e",
+                        "surface-container-high": "#282a2e",
+                        "on-secondary-fixed-variant": "#7b008f",
+                        "error": "#ffb4ab",
+                        "primary": "#c3f5ff",
+                        "on-tertiary-fixed-variant": "#00531e",
+                        "outline-variant": "#3b494c",
+                        "secondary-fixed": "#ffd6fe",
+                        "on-secondary-container": "#f7a0ff",
+                        "on-surface": "#e2e2e8",
+                        "background": "#111318",
+                        "on-surface-variant": "#bac9cc",
+                        "on-primary-fixed": "#001f24",
+                        "on-secondary": "#570066",
+                        "surface-variant": "#333539",
+                        "secondary": "#f9abff",
+                        "surface": "#111318",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#3ce36a",
+                        "on-primary-container": "#00626e",
+                        "on-tertiary": "#003912",
+                        "on-primary-fixed-variant": "#004f58",
+                        "primary-fixed-dim": "#00daf3",
+                        "error-container": "#93000a",
+                        "tertiary-container": "#49ed72",
+                        "on-secondary-fixed": "#35003f",
+                        "inverse-primary": "#006875",
+                        "on-tertiary-container": "#006727",
+                        "on-tertiary-fixed": "#002108",
+                        "on-primary": "#00363d",
+                        "surface-container": "#1e2024",
+                        "surface-container-low": "#1a1c20"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(51, 53, 57, 0.3);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-orb-cyan {
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .ai-orb-purple {
+            background: radial-gradient(circle, rgba(249, 171, 255, 0.1) 0%, transparent 70%);
+            filter: blur(40px);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Error state formatting used by JS */
+        #status-bar.error .spinner {
+            display: none;
+        }
+
+        #status-bar.error {
+            border-color: #ffb4ab;
+            background: rgba(105, 0, 5, 0.8);
+        }
+
+        /* Auto-complete formatting used by JS */
+        .ac-item {
+            @apply flex items-center justify-between p-3 hover:bg-surface-container-highest cursor-pointer rounded-lg transition-colors border-b border-outline-variant/10 last:border-0;
+        }
+
+        .ac-item-content {
+            @apply flex flex-col gap-1;
+        }
+
+        .ac-symbol {
+            @apply font-bold text-primary-container;
+        }
+
+        .ac-name {
+            @apply text-on-surface-variant text-xs truncate max-w-[150px];
+        }
+
+        .ac-type {
+            @apply text-[9px] bg-surface-container-highest px-2 py-0.5 rounded text-outline uppercase font-bold tracking-widest;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-background font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen pb-24 md:pb-0">
+
+    <!-- Global Toast / Status Bar -->
+    <div id="status-bar"
+        class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] hidden flex items-center gap-3 px-6 py-3 rounded-full border border-primary/30 bg-[#111318]/95 backdrop-blur shadow-2xl transition-all">
+        <div class="spinner w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+        <span id="status-text" class="text-sm font-bold text-on-surface">Synchronizing parameters...</span>
+    </div>
+
+    <!-- Background Atmospheric Orbs -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="ai-orb-cyan absolute -top-24 -left-24 w-[500px] h-[500px]"></div>
+        <div class="ai-orb-purple absolute top-1/2 -right-24 w-[600px] h-[600px]"></div>
+    </div>
+
+    <!-- TopAppBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-[#111318]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 bg-gradient-to-b from-[#1a1c20] to-transparent">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[#c3f5ff]" data-icon="bubble_chart">bubble_chart</span>
+            <span class="text-xl font-black tracking-widest text-[#00e5ff] uppercase font-headline">MAJOR MINOR</span>
+        </div>
+        <nav class="hidden md:flex gap-8 items-center">
+            <a class="text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter"
+                href="index.html">Terminal</a>
+            <a class="text-[#e2e2e8]/60 hover:text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter"
+                href="models.html">Models</a>
+            <a class="text-[#e2e2e8]/60 hover:text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter"
+                href="docs.html">Docs</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <div
+                class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+                <img alt="User Profile" class="w-full h-full object-cover" data-alt="User avatar illustration"
+                    src="profile.jpg" />
+            </div>
+        </div>
+    </header>
+
+    <main class="relative pt-24 px-6 max-w-7xl mx-auto pb-12">
+        <!-- Control Center (Hero Bento) -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+            <!-- Search & Engine Selection -->
+            <div class="lg:col-span-4 glass-card rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <label
+                        class="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-4 block">Control
+                        Center</label>
+                    <div class="relative mb-6">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary"
+                            data-icon="search">search</span>
+                        <input id="ticker-input" autocomplete="off"
+                            class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 text-on-surface focus:ring-2 focus:ring-primary-container font-headline font-bold text-lg"
+                            placeholder="Search Ticker..." type="text" value="INR=X" />
+                        <div id="autocomplete-results"
+                            class="hidden absolute top-[calc(100%+8px)] left-0 w-full z-50 bg-[#111318]/95 backdrop-blur-md rounded-xl p-2 border border-outline-variant/30 shadow-2xl max-h-64 overflow-y-auto">
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/10">
+                            <span
+                                class="text-[10px] uppercase tracking-widest text-on-surface-variant block mb-2">Inference
+                                Engine</span>
+                            <div class="relative flex items-center justify-between cursor-pointer group"
+                                id="model-dropdown-trigger">
+                                <span class="text-on-surface font-semibold truncate pr-8 select-none"
+                                    id="model-selected-text">LSTM Neural Network</span>
+                                <span
+                                    class="material-symbols-outlined text-primary absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none group-hover:translate-y-[-2px] transition-transform"
+                                    data-icon="expand_more">expand_more</span>
+                                <input type="hidden" id="model-select" value="lstm">
+                                <ul id="model-dropdown-list"
+                                    class="hidden absolute top-[calc(100%+12px)] left-0 w-full z-50 bg-[#111318]/95 backdrop-blur-md rounded-xl p-2 border border-outline-variant/30 shadow-2xl max-h-64 overflow-y-auto m-0 list-none">
+                                    <li class="ac-item" data-value="lstm">
+                                        <span class="ac-symbol">LSTM Neural Network</span>
+                                    </li>
+                                    <li class="ac-item" data-value="rf">
+                                        <span class="ac-symbol">Random Forest Ensemble</span>
+                                    </li>
+                                    <li class="ac-item" data-value="lr">
+                                        <span class="ac-symbol">Linear Regression Baseline</span>
+                                    </li>
+                                    <li class="ac-item" data-value="ensemble">
+                                        <span class="ac-symbol">All Models (Ensemble Average)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-3 rounded-lg bg-surface-container-low/50 text-center">
+                                <span class="text-[10px] text-on-surface-variant block">Confidence</span>
+                                <span class="text-primary font-bold">94.2%</span>
+                            </div>
+                            <div class="p-3 rounded-lg bg-surface-container-low/50 text-center">
+                                <span class="text-[10px] text-on-surface-variant block">Latency</span>
+                                <span class="text-secondary font-bold">12ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Execute Button -->
+                <button id="predict-btn"
+                    class="mt-8 w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold tracking-tight active:scale-95 transition-transform flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">play_arrow</span>
+                    Execute Projection
+                </button>
+            </div>
+
+            <!-- Main Chart Area -->
+            <div class="lg:col-span-8 glass-card rounded-xl p-6 overflow-hidden relative flex flex-col">
+                <div class="flex justify-between items-start mb-8 relative z-10 shrink-0">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h2 class="text-3xl font-headline font-extrabold text-on-surface tracking-tighter"
+                                id="asset-name">Terminal Analytics</h2>
+                            <span class="text-primary-container font-mono text-sm uppercase" id="asset-ticker"></span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl font-headline font-black text-on-surface" id="asset-price"></span>
+                            <div id="trend-indicator"
+                                class="hidden items-center gap-1 bg-tertiary-container/10 border border-tertiary-container/30 px-3 py-1.5 rounded-full text-xs font-bold text-tertiary-container">
+                                <!-- updated by js -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 relative z-20">
+                        <div class="flex gap-2">
+                            <span
+                                class="px-3 py-1 rounded-full bg-surface-container-highest text-[10px] font-bold uppercase tracking-widest border border-outline-variant/20">100D
+                                Historical</span>
+                            <span
+                                class="px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-bold uppercase tracking-widest border border-secondary/20">5D
+                                AI Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Canvas -->
+                <div class="flex-grow w-full relative min-h-[300px]">
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secondary Feed Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- News Feed -->
+            <div class="lg:col-span-2 glass-card rounded-xl overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-white/5 flex justify-between items-center">
+                    <h3 class="font-headline font-bold text-lg tracking-tight">Signal Feed</h3>
+                    <div class="flex items-center gap-2 bg-tertiary-container/10 border border-tertiary-container/30 px-3 py-1.5 rounded-full hidden"
+                        id="news-sentiment-badge">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="divide-y divide-white/5 flex-grow" id="news-feed-container">
+                    <div class="p-6 text-on-surface-variant flex items-center gap-3">
+                        <i class="ph-light ph-newspaper text-xl"></i>
+                        <span>Awaiting engine initialization to fetch news.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats & Insights Side Rail -->
+            <div class="space-y-6">
+                <!-- 5-Day Projection -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="font-headline font-bold mb-6 text-sm tracking-[0.1em] uppercase text-on-surface-variant">
+                        5-Day Projection</h3>
+                    <div id="forecast-list" class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 text-sm text-on-surface-variant">
+                            <i class="ph-light ph-clock"></i> Awaiting projection sequence...
+                        </div>
+                    </div>
+
+                    <!-- PDF Export Menu -->
+                    <button id="download-btn" disabled
+                        class="w-full py-3 rounded-xl border border-primary/30 text-primary font-bold hover:bg-primary/10 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span class="material-symbols-outlined" data-icon="description">description</span>
+                        Export PDF Report
+                    </button>
+                </div>
+
+                <div class="glass-card rounded-xl p-6 border-l-4 border-primary">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant block mb-4">Neural
+                        Insight</span>
+                    <p class="text-sm leading-relaxed text-on-surface/80">
+                        The AI quant projection is optimized for the next 5 trading days. The historical LSTM patterns
+                        and current feature space dictate the target output paths. Ensure sufficient momentum
+                        confirmation before deployment.
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="font-headline font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary"
+                            data-icon="auto_awesome">auto_awesome</span>
+                        Market Pulse
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant">Volume</span>
+                            <span class="text-xs font-bold">Live API Hook</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant">Volatility Baseline</span>
+                            <span class="text-xs font-bold text-error">Uncertain</span>
+                        </div>
+                        <div class="w-full bg-surface-container-low h-1 rounded-full overflow-hidden">
+                            <div class="bg-error h-full w-[50%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-3 pb-6 px-4 bg-[#333539]/40 backdrop-blur-[24px] rounded-t-[1.5rem] border-t border-white/10 shadow-[0_-20px_60px_-10px_rgba(226,226,232,0.06)]">
+        <a href="index.html"
+            class="flex flex-col items-center justify-center text-[#00e5ff] bg-[#c3f5ff]/10 rounded-xl px-4 py-1 active:scale-90 transition-transform duration-150">
+            <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+            <span class="font-body text-[10px] uppercase tracking-widest">Terminal</span>
+        </a>
+        <a href="models.html"
+            class="flex flex-col items-center justify-center text-[#e2e2e8]/40 hover:bg-white/5 active:scale-90 transition-transform duration-150">
+            <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+            <span class="font-body text-[10px] uppercase tracking-widest">Models</span>
+        </a>
+        <a href="docs.html"
+            class="flex flex-col items-center justify-center text-[#e2e2e8]/40 hover:bg-white/5 active:scale-90 transition-transform duration-150">
+            <span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+            <span class="font-body text-[10px] uppercase tracking-widest">Docs</span>
+        </a>
+    </nav>
+
+    <!-- External scripts needed for functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

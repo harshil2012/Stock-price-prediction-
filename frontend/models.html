@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary": "#b1ffb5",
+            "surface-dim": "#111318",
+            "secondary-container": "#86039c",
+            "surface-container-highest": "#333539",
+            "tertiary-fixed": "#69ff87",
+            "inverse-surface": "#e2e2e8",
+            "surface-container-lowest": "#0c0e12",
+            "outline": "#849396",
+            "primary-container": "#00e5ff",
+            "on-error": "#690005",
+            "primary-fixed": "#9cf0ff",
+            "on-background": "#e2e2e8",
+            "secondary-fixed-dim": "#f9abff",
+            "surface-tint": "#00daf3",
+            "inverse-on-surface": "#2f3035",
+            "surface-bright": "#37393e",
+            "surface-container-high": "#282a2e",
+            "on-secondary-fixed-variant": "#7b008f",
+            "error": "#ffb4ab",
+            "primary": "#c3f5ff",
+            "on-tertiary-fixed-variant": "#00531e",
+            "outline-variant": "#3b494c",
+            "secondary-fixed": "#ffd6fe",
+            "on-secondary-container": "#f7a0ff",
+            "on-surface": "#e2e2e8",
+            "background": "#111318",
+            "on-surface-variant": "#bac9cc",
+            "on-primary-fixed": "#001f24",
+            "on-secondary": "#570066",
+            "surface-variant": "#333539",
+            "secondary": "#f9abff",
+            "surface": "#111318",
+            "on-error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#3ce36a",
+            "on-primary-container": "#00626e",
+            "on-tertiary": "#003912",
+            "on-primary-fixed-variant": "#004f58",
+            "primary-fixed-dim": "#00daf3",
+            "error-container": "#93000a",
+            "tertiary-container": "#49ed72",
+            "on-secondary-fixed": "#35003f",
+            "inverse-primary": "#006875",
+            "on-tertiary-container": "#006727",
+            "on-tertiary-fixed": "#002108",
+            "on-primary": "#00363d",
+            "surface-container": "#1e2024",
+            "surface-container-low": "#1a1c20"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .glass-card {
+      background: rgba(51, 53, 57, 0.3);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .orb-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.15;
+    }
+  </style>
+  <style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen pb-24">
+  <!-- Global Toast / Status Bar -->
+  <div id="status-bar"
+      class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] hidden flex items-center gap-3 px-6 py-3 rounded-full border border-primary/30 bg-[#111318]/95 backdrop-blur shadow-2xl transition-all">
+      <div class="spinner w-4 h-4 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
+      <span id="status-text" class="text-sm font-bold text-on-surface">Synchronizing parameters...</span>
+  </div>
+  <!-- Background Orbs -->
+  <div class="orb-glow bg-primary top-[-100px] left-[-100px]"></div>
+  <div class="orb-glow bg-secondary bottom-[-100px] right-[-100px]"></div>
+  <!-- TopAppBar -->
+  <header
+    class="fixed top-0 w-full z-50 bg-[#111318]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 bg-gradient-to-b from-[#1a1c20] to-transparent">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-[#c3f5ff]" data-icon="bubble_chart">bubble_chart</span>
+      <span class="text-xl font-black tracking-widest text-[#00e5ff] uppercase font-headline">MAJOR MINOR</span>
+    </div>
+    <nav class="hidden md:flex gap-8 items-center">
+      <a class="text-[#e2e2e8]/60 hover:text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter"
+        href="index.html">Terminal</a>
+      <a class="text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter" href="models.html">Models</a>
+      <a class="text-[#e2e2e8]/60 hover:text-[#00e5ff] transition-colors font-headline font-bold tracking-tighter"
+        href="docs.html">Docs</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <div
+        class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+        <img alt="User Profile" class="w-full h-full object-cover" data-alt="User avatar illustration"
+          src="profile.jpg" />
+      </div>
+    </div>
+  </header>
+  <main class="pt-28 px-6 max-w-7xl mx-auto">
+    <!-- Hero Section -->
+    <section class="mb-16">
+      <div
+        class="inline-block px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] uppercase tracking-[0.2em] font-bold mb-4">
+        Intelligence Architecture
+      </div>
+      <h2 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter text-on-surface mb-6">
+        The Oracle <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Engines</span>
+      </h2>
+      <p class="text-on-surface-variant max-w-2xl text-lg leading-relaxed">
+        Explore the mathematical foundations of our predictive ecosystem. From deep learning temporal dependencies to
+        high-precision statistical baselines.
+      </p>
+    </section>
+    <!-- Bento Grid Models -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+      <!-- LSTM Model - Featured -->
+      <div class="md:col-span-8 glass-card rounded-xl p-8 flex flex-col justify-between min-h-[400px]">
+        <div>
+          <div class="flex justify-between items-start mb-8">
+            <div class="p-4 rounded-2xl bg-primary/10 border border-primary/20">
+              <span class="material-symbols-outlined text-primary text-4xl" data-icon="neurology">neurology</span>
+            </div>
+            <div class="text-right">
+              <span class="text-primary font-mono text-sm tracking-widest">TYPE: DEEP LEARNING</span>
+              <h3 class="text-3xl font-headline font-bold mt-1">LSTM</h3>
+            </div>
+          </div>
+          <h4 class="text-xl font-headline font-bold text-primary mb-4">Long Short-Term Memory</h4>
+          <p class="text-on-surface-variant text-lg leading-relaxed max-w-xl mb-6">
+            LSTMs are designed to solve the vanishing gradient problem in standard RNNs. By utilizing a "cell state" and
+            complex gating mechanisms, they excel at capturing long-range temporal dependencies in volatile time-series
+            data.
+          </p>
+          <div class="flex gap-4">
+            <div class="px-4 py-2 rounded-lg bg-surface-container-low border border-outline-variant/30">
+              <span
+                class="block text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Complexity</span>
+              <span class="text-tertiary-fixed font-bold">O(W) High</span>
+            </div>
+            <div class="px-4 py-2 rounded-lg bg-surface-container-low border border-outline-variant/30">
+              <span
+                class="block text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Latency</span>
+              <span class="text-secondary-fixed-dim font-bold">~42ms</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-primary/20 border border-surface flex items-center justify-center">
+              <span class="material-symbols-outlined text-xs text-primary"
+                data-icon="settings_input_component">settings_input_component</span>
+            </div>
+            <div class="w-8 h-8 rounded-full bg-secondary/20 border border-surface flex items-center justify-center">
+              <span class="material-symbols-outlined text-xs text-secondary" data-icon="memory">memory</span>
+            </div>
+          </div>
+          <button id="view-weights-btn"
+            class="flex items-center gap-2 text-primary font-bold text-sm hover:translate-x-1 transition-transform">
+            VIEW WEIGHTS <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+      <!-- Linear Regression - Statistical Baseline -->
+      <div class="md:col-span-4 glass-card rounded-xl p-8 flex flex-col">
+        <div class="mb-8">
+          <div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-on-surface-variant" data-icon="show_chart">show_chart</span>
+          </div>
+          <h3 class="text-2xl font-headline font-bold mb-2">Linear Regression</h3>
+          <span class="text-[10px] font-bold tracking-[0.2em] text-on-surface-variant uppercase">Statistical
+            Baseline</span>
+        </div>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-auto">
+          The fundamental anchor of our interpretability layer. It provides a linear approximation of asset movements,
+          serving as the ground-truth benchmark for all complex AI-driven forecasts.
+        </p>
+        <div class="mt-8">
+          <div class="h-24 w-full bg-surface-container-low rounded-lg overflow-hidden relative">
+            <div class="absolute inset-0 flex items-center justify-center opacity-20">
+            </div>
+            <div class="absolute bottom-4 left-4 right-4 h-0.5 bg-primary/40 rotate-[-15deg]"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Random Forest - Ensemble -->
+      <div class="md:col-span-6 glass-card rounded-xl p-8 relative overflow-hidden group">
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-3xl group-hover:bg-secondary/10 transition-colors">
+        </div>
+        <div class="flex items-start gap-6">
+          <div class="p-4 rounded-xl bg-secondary/10 border border-secondary/20">
+            <span class="material-symbols-outlined text-secondary text-3xl" data-icon="account_tree">account_tree</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-headline font-bold mb-2">Random Forest</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">
+              An ensemble method that builds multiple decision trees and merges them together for a more accurate and
+              stable prediction. High interpretability through feature importance analysis.
+            </p>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mt-8">
+          <div class="text-center">
+            <div class="text-secondary font-bold text-xl">128</div>
+            <div class="text-[9px] uppercase tracking-widest text-on-surface-variant">Estimators</div>
+          </div>
+          <div class="text-center border-x border-white/5">
+            <div class="text-secondary font-bold text-xl">Gini</div>
+            <div class="text-[9px] uppercase tracking-widest text-on-surface-variant">Criterion</div>
+          </div>
+          <div class="text-center">
+            <div class="text-secondary font-bold text-xl">0.89</div>
+            <div class="text-[9px] uppercase tracking-widest text-on-surface-variant">F1-Score</div>
+          </div>
+        </div>
+      </div>
+      <!-- AI Oracle Card -->
+      <div
+        class="md:col-span-6 glass-card rounded-xl p-8 bg-gradient-to-br from-surface-container-high/50 to-surface-container-highest/50 flex items-center justify-between border-primary/10">
+        <div>
+          <h3 class="text-2xl font-headline font-bold text-primary mb-2">Explainability Engine</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed max-w-xs">
+            Our proprietary "Major Minor" layer translates high-dimensional vector data into human-readable narratives.
+          </p>
+          <button id="shap-values-btn"
+            class="mt-6 px-6 py-2 rounded-full bg-primary text-on-primary font-bold text-xs tracking-widest uppercase hover:shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all">
+            Access SHAP Values
+          </button>
+        </div>
+        <div class="w-32 h-32 relative">
+          <div class="absolute inset-0 rounded-full border border-primary/20 animate-pulse"></div>
+          <div class="absolute inset-4 rounded-full border border-secondary/20"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-5xl" data-icon="auto_awesome"
+              style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Comparative Table Area (Tonal Layering instead of borders) -->
+    <div class="bg-surface-container-low rounded-2xl p-8">
+      <h3 class="text-xl font-headline font-bold mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" data-icon="compare_arrows">compare_arrows</span>
+        Model Comparison Matrix
+      </h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant border-b border-white/5">
+              <th class="pb-4 font-bold">Architecture</th>
+              <th class="pb-4 font-bold">Primary Use</th>
+              <th class="pb-4 font-bold">Interpretability</th>
+              <th class="pb-4 font-bold">Status</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm">
+            <tr class="border-b border-white/5">
+              <td class="py-6 font-bold font-headline">LSTM (Core)</td>
+              <td class="py-6 text-on-surface-variant">Temporal Dependency Mapping</td>
+              <td class="py-6">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div class="w-[30%] h-full bg-secondary"></div>
+                  </div>
+                  <span class="text-xs text-secondary">Low</span>
+                </div>
+              </td>
+              <td class="py-6">
+                <span
+                  class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary-fixed text-[10px] font-bold uppercase">Operational</span>
+              </td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="py-6 font-bold font-headline">Random Forest</td>
+              <td class="py-6 text-on-surface-variant">Feature Importance Scoring</td>
+              <td class="py-6">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div class="w-[75%] h-full bg-primary"></div>
+                  </div>
+                  <span class="text-xs text-primary">High</span>
+                </div>
+              </td>
+              <td class="py-6">
+                <span
+                  class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary-fixed text-[10px] font-bold uppercase">Operational</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-6 font-bold font-headline">Linear Reg.</td>
+              <td class="py-6 text-on-surface-variant">Drift Detection Baseline</td>
+              <td class="py-6">
+                <div class="flex items-center gap-2">
+                  <div class="w-16 h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div class="w-[100%] h-full bg-primary-container"></div>
+                  </div>
+                  <span class="text-xs text-primary-container">Total</span>
+                </div>
+              </td>
+              <td class="py-6">
+                <span
+                  class="px-3 py-1 rounded-full bg-surface-bright text-on-surface-variant text-[10px] font-bold uppercase">Archived</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <!-- BottomNavBar -->
+  <nav
+    class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pt-3 pb-6 px-4 bg-[#333539]/40 backdrop-blur-[24px] rounded-t-[1.5rem] border-t border-white/10 md:hidden">
+    <a href="index.html"
+      class="flex flex-col items-center justify-center text-[#e2e2e8]/40 hover:bg-white/5 active:scale-90 transition-transform duration-150">
+      <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+      <span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Terminal</span>
+    </a>
+    <a href="models.html"
+      class="flex flex-col items-center justify-center text-[#00e5ff] bg-[#c3f5ff]/10 rounded-xl px-4 py-1 active:scale-90 transition-transform duration-150">
+      <span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+      <span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Models</span>
+    </a>
+    <a href="docs.html"
+      class="flex flex-col items-center justify-center text-[#e2e2e8]/40 hover:bg-white/5 active:scale-90 transition-transform duration-150">
+      <span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+      <span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Docs</span>
+    </a>
+  </nav>
+  <script src="app.js"></script>
+</body>
+
+</html>
