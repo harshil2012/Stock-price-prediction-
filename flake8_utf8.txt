@@ -1,0 +1,39 @@
+﻿training\train_models.py:6:80: E501 line too long (82 > 79 characters)
+training\train_models.py:11:80: E501 line too long (120 > 79 characters)
+training\train_models.py:16:1: E302 expected 2 blank lines, found 1
+training\train_models.py:16:80: E501 line too long (107 > 79 characters)
+training\train_models.py:27:1: W293 blank line contains whitespace
+training\train_models.py:29:1: W293 blank line contains whitespace
+training\train_models.py:30:80: E501 line too long (90 > 79 characters)
+training\train_models.py:31:1: W293 blank line contains whitespace
+training\train_models.py:42:1: E302 expected 2 blank lines, found 1
+training\train_models.py:48:1: E302 expected 2 blank lines, found 1
+training\train_models.py:54:1: E302 expected 2 blank lines, found 1
+training\train_models.py:58:1: W293 blank line contains whitespace
+training\train_models.py:62:1: W293 blank line contains whitespace
+training\train_models.py:68:1: W293 blank line contains whitespace
+training\train_models.py:69:80: E501 line too long (91 > 79 characters)
+training\train_models.py:72:1: W293 blank line contains whitespace
+training\train_models.py:73:80: E501 line too long (93 > 79 characters)
+training\train_models.py:74:1: W293 blank line contains whitespace
+training\train_models.py:81:1: W293 blank line contains whitespace
+training\train_models.py:89:1: E302 expected 2 blank lines, found 1
+training\train_models.py:94:1: W293 blank line contains whitespace
+training\train_models.py:97:1: W293 blank line contains whitespace
+training\train_models.py:99:80: E501 line too long (157 > 79 characters)
+training\train_models.py:100:1: W293 blank line contains whitespace
+training\train_models.py:102:62: W291 trailing whitespace
+training\train_models.py:106:80: E501 line too long (86 > 79 characters)
+training\train_models.py:107:80: E501 line too long (86 > 79 characters)
+training\train_models.py:108:1: W293 blank line contains whitespace
+training\train_models.py:115:1: W293 blank line contains whitespace
+training\train_models.py:117:80: E501 line too long (120 > 79 characters)
+training\train_models.py:118:1: W293 blank line contains whitespace
+training\train_models.py:122:1: W293 blank line contains whitespace
+training\train_models.py:126:1: W293 blank line contains whitespace
+training\train_models.py:130:1: W293 blank line contains whitespace
+training\train_models.py:134:1: W293 blank line contains whitespace
+training\train_models.py:135:80: E501 line too long (86 > 79 characters)
+training\train_models.py:136:1: W293 blank line contains whitespace
+training\train_models.py:138:1: W293 blank line contains whitespace
+training\train_models.py:145:1: E305 expected 2 blank lines after class or function definition, found 1
